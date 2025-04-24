@@ -1,0 +1,102 @@
+local TweenService = game:GetService("TweenService")
+
+-- GUI Background
+local screenGui = Instance.new("ScreenGui", game.CoreGui)
+screenGui.Name = "LoadingScreen"
+
+local bg = Instance.new("Frame")
+bg.Size = UDim2.new(0.6, 0, 0.4, 0)
+bg.Position = UDim2.new(0.2, 0, 0.3, 0)
+bg.BackgroundColor3 = Color3.new(0, 0, 0)
+bg.BackgroundTransparency = 0.3
+bg.Parent = screenGui
+
+-- Teks Loading
+local label = Instance.new("TextLabel")
+label.Size = UDim2.new(1, 0, 0.5, 0)
+label.Position = UDim2.new(0, 0, 0.25, 0)
+label.BackgroundTransparency = 1
+label.TextColor3 = Color3.new(1, 0, 0)
+label.TextScaled = true
+label.Font = Enum.Font.SourceSansBold
+label.Text = ""
+label.Parent = bg
+
+local messages = {
+    "Jalanin script...",
+    "Script by Redz Hub",
+    "Dravin load script...",
+}
+
+for _, msg in ipairs(messages) do
+    label.Text = msg
+    wait(2.5)
+end
+label:Destroy()
+
+-- Notif WA-style
+local notifGui = Instance.new("ScreenGui", game.CoreGui)
+notifGui.Name = "NotifGui"
+
+local notifFrame = Instance.new("Frame")
+notifFrame.Size = UDim2.new(0, 300, 0, 80)
+notifFrame.Position = UDim2.new(1, 10, 1, -100)
+notifFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+notifFrame.BorderSizePixel = 0
+notifFrame.BackgroundTransparency = 0.1
+notifFrame.Parent = notifGui
+
+local title = Instance.new("TextLabel", notifFrame)
+title.Size = UDim2.new(1, -20, 0, 30)
+title.Position = UDim2.new(0, 10, 0, 5)
+title.BackgroundTransparency = 1
+title.TextColor3 = Color3.fromRGB(0, 255, 0)
+title.Text = "Dravin Load"
+title.Font = Enum.Font.SourceSansBold
+title.TextSize = 20
+title.TextXAlignment = Enum.TextXAlignment.Left
+
+local body = Instance.new("TextLabel", notifFrame)
+body.Size = UDim2.new(1, -20, 0, 30)
+body.Position = UDim2.new(0, 10, 0, 35)
+body.BackgroundTransparency = 1
+body.TextColor3 = Color3.new(1, 1, 1)
+body.Text = "Redz Hub"
+body.Font = Enum.Font.SourceSans
+body.TextSize = 18
+body.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Tween masuk
+TweenService:Create(notifFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {
+    Position = UDim2.new(1, -310, 1, -100)
+}):Play()
+
+wait(3)
+
+-- Tween keluar
+TweenService:Create(notifFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {
+    Position = UDim2.new(1, 10, 1, -100)
+}):Play()
+
+wait(0.6)
+notifGui:Destroy()
+
+-- Jalanin SCRIPT Redz Hub
+local Settings = {
+    JoinTeam = "Pirates"; -- Pirates/Marines
+    Translator = true; -- true/false
+}
+loadstring(game:HttpGet("https://raw.githubusercontent.com/newredz/BloxFruits/refs/heads/main/Source.luau"))(Settings)
+
+-- Teks Final
+local doneLabel = Instance.new("TextLabel", bg)
+doneLabel.Size = UDim2.new(1, 0, 0.5, 0)
+doneLabel.Position = UDim2.new(0, 0, 0.25, 0)
+doneLabel.BackgroundTransparency = 1
+doneLabel.TextColor3 = Color3.new(0, 1, 0)
+doneLabel.TextScaled = true
+doneLabel.Font = Enum.Font.SourceSansBold
+doneLabel.Text = "Dravin Script Load Done"
+
+wait(3)
+screenGui:Destroy()
