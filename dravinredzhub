@@ -23,80 +23,110 @@ label.Text = ""
 label.Parent = bg
 
 local messages = {
-    "Jalanin script...",
-    "Script by Redz Hub",
-    "Dravin load script...",
+    "Running script...",
+    "load script...",
 }
 
 for _, msg in ipairs(messages) do
     label.Text = msg
     wait(2.5)
 end
-label:Destroy()
 
--- Notif WA-style
-local notifGui = Instance.new("ScreenGui", game.CoreGui)
-notifGui.Name = "NotifGui"
+-- Progress bar loading
+local progressBarBg = Instance.new("Frame", bg)
+progressBarBg.Size = UDim2.new(1, -20, 0.1, 0)
+progressBarBg.Position = UDim2.new(0, 10, 0.75, 0)
+progressBarBg.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+progressBarBg.BorderSizePixel = 0
 
-local notifFrame = Instance.new("Frame")
-notifFrame.Size = UDim2.new(0, 300, 0, 80)
-notifFrame.Position = UDim2.new(1, 10, 1, -100)
-notifFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-notifFrame.BorderSizePixel = 0
-notifFrame.BackgroundTransparency = 0.1
-notifFrame.Parent = notifGui
+local progressBar = Instance.new("Frame", progressBarBg)
+progressBar.Size = UDim2.new(0, 0, 1, 0)
+progressBar.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+progressBar.BorderSizePixel = 0
 
-local title = Instance.new("TextLabel", notifFrame)
-title.Size = UDim2.new(1, -20, 0, 30)
-title.Position = UDim2.new(0, 10, 0, 5)
-title.BackgroundTransparency = 1
-title.TextColor3 = Color3.fromRGB(0, 255, 0)
-title.Text = "Dravin Load"
-title.Font = Enum.Font.SourceSansBold
-title.TextSize = 20
-title.TextXAlignment = Enum.TextXAlignment.Left
+-- Fungsi buat notif gaya WA
+local function createNotif(judul, isi)
+    local notifGui = Instance.new("ScreenGui", game.CoreGui)
+    notifGui.Name = "NotifGui_" .. judul
 
-local body = Instance.new("TextLabel", notifFrame)
-body.Size = UDim2.new(1, -20, 0, 30)
-body.Position = UDim2.new(0, 10, 0, 35)
-body.BackgroundTransparency = 1
-body.TextColor3 = Color3.new(1, 1, 1)
-body.Text = "Redz Hub"
-body.Font = Enum.Font.SourceSans
-body.TextSize = 18
-body.TextXAlignment = Enum.TextXAlignment.Left
+    local notifFrame = Instance.new("Frame")
+    notifFrame.Size = UDim2.new(0, 300, 0, 80)
+    notifFrame.Position = UDim2.new(1, 10, 1, -100)
+    notifFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    notifFrame.BorderSizePixel = 0
+    notifFrame.BackgroundTransparency = 0.1
+    notifFrame.Parent = notifGui
 
--- Tween masuk
-TweenService:Create(notifFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {
-    Position = UDim2.new(1, -310, 1, -100)
-}):Play()
+    local title = Instance.new("TextLabel", notifFrame)
+    title.Size = UDim2.new(1, -20, 0, 30)
+    title.Position = UDim2.new(0, 10, 0, 5)
+    title.BackgroundTransparency = 1
+    title.TextColor3 = Color3.fromRGB(255, 0, 0)
+    title.Text = judul
+    title.Font = Enum.Font.SourceSansBold
+    title.TextSize = 20
+    title.TextXAlignment = Enum.TextXAlignment.Left
 
-wait(3)
+    local body = Instance.new("TextLabel", notifFrame)
+    body.Size = UDim2.new(1, -20, 0, 30)
+    body.Position = UDim2.new(0, 10, 0, 35)
+    body.BackgroundTransparency = 1
+    body.TextColor3 = Color3.new(1, 1, 1)
+    body.Text = isi
+    body.Font = Enum.Font.SourceSans
+    body.TextSize = 18
+    body.TextXAlignment = Enum.TextXAlignment.Left
 
--- Tween keluar
-TweenService:Create(notifFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {
-    Position = UDim2.new(1, 10, 1, -100)
-}):Play()
+    -- Suara notif
+    local sound = Instance.new("Sound", notifGui)
+sound.SoundId = "rbxassetid://3442983711"  -- Ganti ini kalau mau suara lain
+    sound.Volume = 1
+    sound:Play()
 
-wait(0.6)
-notifGui:Destroy()
+    TweenService:Create(notifFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {
+        Position = UDim2.new(1, -310, 1, -100)
+    }):Play()
 
--- Jalanin SCRIPT Redz Hub
-local Settings = {
-    JoinTeam = "Pirates"; -- Pirates/Marines
-    Translator = true; -- true/false
-}
-loadstring(game:HttpGet("https://raw.githubusercontent.com/newredz/BloxFruits/refs/heads/main/Source.luau"))(Settings)
+    wait(3)
 
--- Teks Final
-local doneLabel = Instance.new("TextLabel", bg)
-doneLabel.Size = UDim2.new(1, 0, 0.5, 0)
-doneLabel.Position = UDim2.new(0, 0, 0.25, 0)
-doneLabel.BackgroundTransparency = 1
-doneLabel.TextColor3 = Color3.new(0, 1, 0)
-doneLabel.TextScaled = true
-doneLabel.Font = Enum.Font.SourceSansBold
-doneLabel.Text = "Dravin Script Load Done"
+    TweenService:Create(notifFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {
+        Position = UDim2.new(1, 10, 1, -100)
+    }):Play()
 
-wait(3)
-screenGui:Destroy()
+    wait(0.6)
+    notifGui:Destroy()
+end
+
+-- Mulai loading bar
+local function updateProgressBar()
+    for i = 0, 100, 1 do
+        progressBar.Size = UDim2.new(i / 100, 0, 1, 0)
+        label.Text = "Loading... " .. i .. "%"
+        wait(0.05)
+    end
+
+    -- Selesai loading
+    screenGui:Destroy()
+
+    -- Jalankan Redz Hub
+    local Settings = {
+        JoinTeam = "Pirates";
+        Translator = true;
+    }
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/newredz/BloxFruits/refs/heads/main/Source.luau"))(Settings)
+
+    -- Tampilkan notifikasi setelah Redz Hub jalan
+    task.spawn(function()
+        wait(1)
+        createNotif("RedzDravin", "Successfully load RedzHub✅")
+        wait(0.2)
+        createNotif("Dravin X Redz Hub", "Script Collaboration")
+        wait(0.2)
+        createNotif("TikTok", "@dr4vin")
+        wait(0.2)
+        createNotif("Discord RedzHub", "discord.gg/7aR7kNVt4g")
+    end)
+end
+
+-- Jalankan loading
+spawn(updateProgressBar)
